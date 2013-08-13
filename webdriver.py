@@ -11,7 +11,7 @@ class Stepan(NeedleWebDriver, WebDriver):
 	def __init__(self, *args, **kwargs):
 		super(Stepan, self).__init__(*args, **kwargs)
 		
-		# This tool is used for waiting for WebDriver certain events described in lambad
+		# This tool is used for waiting for WebDriver certain events described in lambda
 		# passed to it's methods
 		self.wait = WebDriverWait(self, 30)
 
