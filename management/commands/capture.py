@@ -17,7 +17,7 @@ class Command(BaseCommand):
 	option_list = BaseCommand.option_list + (
 		make_option('--testcase', dest='testcase', default=None, help='Import path of captured test'),
 		make_option('--filename', dest='filename', default=None, help='Screenshot filename'),
-		make_option('--name', default=None, help='Captured screenshot filename without extension'),
+		make_option('--name', default=None, help='Test name without test_ prefix'),
 	)
 
 	def handle(self, *args, **options):
