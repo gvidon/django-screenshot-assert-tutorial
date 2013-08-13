@@ -1,4 +1,4 @@
-django-screenshot-assert-tutorial
-=================================
+Automated Django CSS testing
+============================
 
-Automated CSS Django testing using selenium and needle
+Work in progress.
