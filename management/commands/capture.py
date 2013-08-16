@@ -2,7 +2,6 @@ import os
 import re
 import sys
 
-from pyvirtualdisplay            import Display
 from optparse                    import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management      import call_command
@@ -16,14 +15,13 @@ from rew3.webdriver              import Stepan
 class Command(BaseCommand):
 	option_list = BaseCommand.option_list + (
 		make_option('--testcase', dest='testcase', default=None, help='Import path of captured test'),
-		make_option('--filename', dest='filename', default=None, help='Screenshot filename'),
 		make_option('--name', default=None, help='Test name without test_ prefix'),
 	)
 
 	def handle(self, *args, **options):
 		address = os.environ.get('DJANGO_LIVE_TEST_SERVER_ADDRESS')
 
-		# Run live server on all hosts if user haven't defined hostname
+		# Live server will be binded to all hosts if user haven't defined hostname
 		if re.match(address, '^:'):
 			address = '0.0.0.0%s' % address
 
@@ -32,14 +30,14 @@ class Command(BaseCommand):
 		except ValueError:
 			raise CommandError('Live server port not defined')
 
-		# Get testcase class
-		test_class = options['testcase'].split('.')[-1]
-		module = __import__(('.').join(options['testcase'].split('.')[:-1]), fromlist=test_class)
+		# Get testcase class by parsing import string
+		try:
+			test_class = options['testcase'].split('.')[-1]
+			module = __import__(('.').join(options['testcase'].split('.')[:-1]), fromlist=test_class)
+		except AttributeError:
+			raise CommandError('Wrong test case import path specified in --testcase option')
 
 		TestCase = getattr(module, test_class)
-
-		# print TestCase('test_%s' % options['name'])
-		# return
 
 		# Prepare DB connection for live server
 		connections_override = {}
@@ -53,28 +51,27 @@ class Command(BaseCommand):
 		# Setup DB and fixtures
 		db_name = connection.creation.create_test_db(verbosity=False, autoclobber=False)
 
-		call_command('migrate')
-
 		if hasattr(TestCase, 'fixtures'):
 			call_command('loaddata', *TestCase.fixtures, **{'verbosity': False})
 
-		# Start live server. No need to parse ports ranges for screen capturing.
+		# Start live server. No need to parse ports ranges for screen capturing
+		# as it served by just one server.
 		server = LiveServerThread(host, map(lambda P: int(P), re.split('\-|,', ports)), connections_override)
 
-		server.setDaemon(False)
+		server.setDaemon(True)
 		server.start()
 		server.is_ready.wait()
 
-		test = TestCase('test_%s' % options['name'], **{'capture': True})
+		Init Ghost driver and capture page that will be tested
+		test = TestCase('test_%s' % options['name'])
 
+		test.init_driver()
 		test.server_thread = server
 
-		getattr(test, 'screenshot_%s' % options['name'])().save(os.path.join(
-			settings.SCREENSHOT_ROOT,
-			'%s.png' % options.get('filename', '%s.%s' % (options['testcase'], options['name']))
-		))
+		# TestCase.screenshot_<name> is the screenshot asserted in TestCase.test_<name>
+		getattr(test, 'screenshot_%s' % options['name'])(settings.SCREENSHOT_ROOT)
 
 		# Clean up test environment
-		test.driver.quit()
-		server.join()
+		test.driver.exit()
 		connection.creation.destroy_test_db(db_name)
+		server.join()
