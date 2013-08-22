@@ -9,10 +9,10 @@ and ImageDiff method of [needle](http://needle.readthedocs.org/en/latest/) pytho
 
 In [management/command/capture.py](https://github.com/gvidon/django-screenshot-assert-tutorial/blob/master/management/commands/capture.py) we do set up test environment DB, run Django live
 server and capture screenshot. It looks bit complicated, but we haven't yet found simpler solution ([this](https://docs.djangoproject.com/en/1.5/topics/testing/advanced/#running-tests-outside-the-test-runner) just doesn't work). This command accepts test case import path and
-capturing test name. It will utilize screenshot_`<name>` method of test case
+capturing test name. It will utilize `screenshot_<name>` method of test case
 to capture page and save it. 
 
-screenshot_`<name>` is also used to obtain screenshot image during tests, what it does
+`screenshot_<name>` is also used to obtain screenshot image during tests, what it does
 is actual image capturing and saving to specified directory. Its essential part
 is so called webdriver Ghost.py — phantomjs based python tool that renders
 page in-memory and allow to play with it's DOM in simple manner. Like this:
@@ -27,7 +27,7 @@ ghost.fire_on('form', 'submit', expect_loading=True)
 ```
 
 Now as we have captured sample page we can later run tests. We use the same
-screenshot_`<name>` method of test case and pass captured screenshot image to the needle
+`screenshot_<name>` method of test case and pass captured screenshot image to the needle
 ImageDiff method to have the value of images differences and fail test if it is too high:
 
 ```python
