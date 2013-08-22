@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 from basetestcase import CSSTestCase
 
+
 class DocumentsCSSTestCase(CSSTestCase):
 	fixtures = ['users', 'documents']
 	
