@@ -8,7 +8,7 @@ class DocumentsCSSTestCase(CSSTestCase):
 	fixtures = ['users', 'documents']
 	
 	def test_list(self):
-		self.screenshot_cards()
+		self.screenshot_list()
 		self.assertScreenshot('documents-list')
 
 	def screenshot_list(self, path=settings.SCREENSHOT_TMP_ROOT):
