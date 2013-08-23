@@ -1,5 +1,3 @@
-import sys
-
 from django.conf import settings
 from ghost import Ghost
 
