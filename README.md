@@ -26,6 +26,10 @@ ghost.fill('form', {
 ghost.fire_on('form', 'submit', expect_loading=True)
 ```
 
+In our environment we use custom webfriver Stepan which use Ghost as base and
+adds two methods. `login()` and custom `open()` which opens page and waits
+before application loading screen disappear.
+
 Now as we have captured sample page we can later run tests. We use the same
 `screenshot_<name>` method of test case and pass captured screenshot image to the needle
 ImageDiff method to have the value of images differences and fail test if it is too high:
