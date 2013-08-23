@@ -26,8 +26,8 @@ ghost.fill('form', {
 ghost.fire_on('form', 'submit', expect_loading=True)
 ```
 
-In our environment we use custom webfriver Stepan which use Ghost as base and
-adds two methods. `login()` and custom `open()` which opens page and waits
+In our environment we use custom webdriver Stepan which use Ghost as base and
+add two methods. `login()` and custom `open()` which open page and wait
 before application loading screen disappear.
 
 Now as we have captured sample page we can later run tests. We use the same
