@@ -4,7 +4,7 @@ from needle.diff    import ImageDiff
 from django.test    import LiveServerTestCase
 from django.conf    import settings
 
-from rew3.webdriver import Stepan
+from webdriver      import Stepan
 
 
 class CSSTestCase(LiveServerTestCase):
