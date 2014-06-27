@@ -62,7 +62,7 @@ class Command(BaseCommand):
 		server.start()
 		server.is_ready.wait()
 
-		Init Ghost driver and capture page that will be tested
+		# Init Ghost driver and capture page that will be tested
 		test = TestCase('test_%s' % options['name'])
 
 		test.init_driver()
